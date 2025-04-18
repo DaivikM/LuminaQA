@@ -1,0 +1,9 @@
+data_dir: data
+persist_dir: ./storage
+file_hashes_path: file_hashes.txt
+embedding_model: sentence-transformers/all-MiniLM-L6-v2
+llm_model: llama3-8b-8192
+llm_temperature: 0.3
+log_dir: logs
+console_log_level: info
+file_log_level: debug
