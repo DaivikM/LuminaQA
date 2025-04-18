@@ -115,7 +115,7 @@ For questions or support, feel free to reach out:
 ## 📚 References
 
 - [Hugging Face Speech-to-Text Models](https://huggingface.co/models?pipeline_tag=automatic-speech-recognition&sort=trending)
-- [GROQ]([https://pytorch.org/](https://console.groq.com/docs/api-reference#chat-create)
+- [GROQ](https://console.groq.com/docs/api-reference#chat-create)
 
 ---
 
