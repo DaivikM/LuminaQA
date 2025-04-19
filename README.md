@@ -121,7 +121,7 @@ For questions or support, feel free to reach out:
 
 ### 🚀 Happy Coding! ✨
 
-Clone this repository and experience real-time STT powered by Hugging Face and Vosk, utilizing the browser microphone through a WebSocket connection.
+🧪 Clone this repository and explore real-time Retrieval-Augmented QA on sacred documents powered by LlamaIndex, LangChain, and Groq’s LLMs—via both console and Flask-based web interfaces.
 
 
 **Made with 💛 using LlamaIndex + LangChain + Groq + HuggingFace + Flask**
