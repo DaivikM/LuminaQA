@@ -1,4 +1,5 @@
 import os
+import json
 import hashlib
 
 def hash_file(file_path):
@@ -34,3 +35,17 @@ def get_documents_to_index(data_dir, file_hashes_path):
                 documents_to_index.append(path)
                 
     return documents_to_index, new_hashes
+
+def load_conversation_history(path):
+    """Load conversation history from a JSON file if it exists, else return an empty list."""
+    if os.path.exists(path):
+        with open(path, "r") as f:
+            return json.load(f)
+    return []
+
+def save_conversation_history(path, history):
+    """Save conversation history to a JSON file, creating the file if it doesn't exist."""
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+
+    with open(path, "w") as f:
+        json.dump(history, f, indent=2)

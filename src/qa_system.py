@@ -1,5 +1,5 @@
 from config import get_config
-from src.file_utils import get_documents_to_index, save_file_hashes
+from src.file_utils import get_documents_to_index, save_file_hashes, load_conversation_history, save_conversation_history
 from src.embedding import create_embedding_model
 from src.llm import LLMInterface
 from src.index_manager import IndexManager
@@ -15,6 +15,11 @@ class SmartDocumentQA:
         self.data_dir = self.config["data_dir"]
         self.persist_dir = self.config["persist_dir"]
         self.file_hashes_path = self.config["file_hashes_path"]
+
+        self.general_history_path = self.config["general_history_path"]
+        self.source_history_path = self.config["source_history_path"]
+        self.general_conversation_history = load_conversation_history(self.general_history_path)
+        self.source_conversation_history = load_conversation_history(self.source_history_path)
         
         # Initialize components
         self.embed_model = create_embedding_model(self.config["embedding_model"])
@@ -40,23 +45,35 @@ class SmartDocumentQA:
         # Initialize document processor
         self.document_processor = DocumentProcessor(self.index, self.embed_model)
     
+
     def ask_question(self, question):
-        """Process a question and return relevant answers and sources."""
+        """Process a question with conversation context and return relevant answers and sources."""
         print(f"\n🤖 Asking: {question}")
         
-        # Search for relevant content in documents
-        search_results = self.document_processor.search_documents(question)
-        
-        # Generate source-based summary
+        # 1. Build conversation-aware query for better retrieval
+        recent_history = self.source_conversation_history[-3:] if len(self.source_conversation_history) >= 3 else self.source_conversation_history
+        contextual_query = "\n".join([f"Q: {qa['question']}\nA: {qa['answer']}" for qa in recent_history])
+        contextual_query += f"\nQ: {question}\nA:"
+
+        # 2. Search documents using the full context
+        search_results = self.document_processor.search_documents(contextual_query)
+
+        # 3. Generate source-based summary using the same context
         source_based_summary = self.llm.get_source_based_summary(
             question, 
             search_results["source_texts"]
         )
         
-        # Generate general answer
-        general_answer = self.llm.get_general_answer(question)
+        # 4. Save to source conversation history
+        self.source_conversation_history.append({"question": question, "answer": source_based_summary})
+        save_conversation_history(self.source_history_path, self.source_conversation_history)
         
-        # Compile results
+        # 5. Generate general answer (optional: use same context here too)
+        general_answer = self.llm.get_general_answer(question)
+        self.general_conversation_history.append({"question": question, "answer": general_answer})
+        save_conversation_history(self.general_history_path, self.general_conversation_history)
+
+        # 6. Compile result
         result = {
             "question": question,
             "general_answer": general_answer,
@@ -68,5 +85,5 @@ class SmartDocumentQA:
             "search_duration": search_results["search_duration"],
             "total_documents": search_results["total_documents"],
         }
-        
+
         return result

@@ -7,3 +7,6 @@ llm_temperature: 0.3
 log_dir: logs
 console_log_level: info
 file_log_level: debug
+general_history_path: ./context/general_conversation_history.json
+source_history_path: ./context/source_conversation_history.json
+conversation_dir: context

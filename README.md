@@ -44,7 +44,7 @@ cd LuminaQA
 ### 2. Create a Conda environment
 
 ```bash
-conda create -p venv python==3.12.9
+conda create -p venv python==3.12.9 -y
 conda activate venv/
 ```
 
@@ -116,6 +116,8 @@ For questions or support, feel free to reach out:
 
 - [Hugging Face](https://huggingface.co/)
 - [GROQ](https://console.groq.com/docs/api-reference#chat-create)
+- [Langchain](https://python.langchain.com/docs/introduction/)
+- [LlamaIndex](https://docs.llamaindex.ai/en/stable/)
 
 ---
 
